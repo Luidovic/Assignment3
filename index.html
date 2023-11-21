@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+		/>
+		<title>VR Game</title>
+		<script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+		<script src="https://unpkg.com/aframe-ui-widgets/dist/aframe-ui-widgets.min.js"></script>
+		<script src="js/aframe-physics-system.min.js"></script>
+	</head>
+	<body>
+		<a-asset>
+			<img src="ground.jpg" id="ground" />
+			<a-asset-item
+				id="fireBall"
+				src="./fireball__energy_sphere/scene.gltf"
+			></a-asset-item>
+		</a-asset>
+
+		<a-scene>
+			<!-- Player (camera) -->
+			<a-sphere
+				position="0 5 -5"
+				radius="0.5"
+				color="blue"
+				id="player"
+			></a-sphere>
+
+			<a-camera>
+				<a-cursor
+					raycaster="objects: .clickable"
+					fuse="true"
+					fuseTimeout="1500"
+					cursor="maxDistance: 30; fuse: true;"
+				></a-cursor>
+			</a-camera>
+
+			<!-- Buttons using A-Frame UI components -->
+			<a-entity gltf-model="#fireBall" position="5 5 5"></a-entity>
+
+			<a-box
+				position="-1 0.2 -2"
+				width="0.3"
+				height="0.15"
+				depth="0.1"
+				color="red"
+				class="clickable"
+				events="click: moveLeft"
+			></a-box>
+
+			<a-box
+				position="0 0.2 -2"
+				width="0.3"
+				height="0.15"
+				depth="0.1"
+				color="green"
+				class="clickable"
+				events="click: moveRight"
+			></a-box>
+
+			<a-box
+				position="1 0.2 -2"
+				width="0.3"
+				height="0.15"
+				depth="0.1"
+				color="blue"
+				class="clickable"
+				events="click: jump"
+			></a-box>
+
+			<a-box
+				position="7 0.2 -10"
+				width="0.3"
+				height="0.15"
+				depth="0.1"
+				color="blue"
+				scale="15 15 15"
+			></a-box>
+
+			<a-box
+				position="2 0.2 -10"
+				width="0.3"
+				height="0.15"
+				depth="0.1"
+				color="red"
+				scale="15 15 15"
+			></a-box>
+
+			<a-box
+				position="2 0.2 -5"
+				width="0.3"
+				height="0.15"
+				depth="0.1"
+				color="green"
+				scale="15 15 15"
+			></a-box>
+
+			<a-box
+				position="4 0.2 -7"
+				width="0.3"
+				height="0.15"
+				depth="0.1"
+				color="yellow"
+				scale="5 5 5"
+			></a-box>
+
+			<a-sphere
+				position="3 5 -5"
+				radius="0.2"
+				color="red"
+				class="clickable"
+				events="click: moveLeft"
+			></a-sphere>
+
+			<a-sphere
+				position="6 4 -7"
+				radius="0.2"
+				color="yellow"
+				class="clickable"
+				events="click: moveRight"
+			></a-sphere>
+
+			<!-- Ground -->
+			<a-plane
+				position="0 0 0"
+				rotation="-90 0 0"
+				width="20"
+				height="20"
+				src="./images/ground.jpg"
+				repeat="100 100"
+			></a-plane>
+
+			<script>
+				AFRAME.registerComponent("clickable", {
+					init: function () {
+						this.el.addEventListener(
+							"click",
+							this.onClick.bind(this)
+						);
+					},
+					onClick: function () {
+						this.el.emit(this.data.events);
+					},
+				});
+
+				// Player movement variables
+				var player = document.getElementById("player");
+				var playerPos = player.getAttribute("position");
+
+				// Player movement functions
+				function moveLeft() {
+					playerPos.x -= 0.5;
+					player.setAttribute("position", playerPos);
+				}
+
+				function moveRight() {
+					playerPos.x += 0.5;
+					player.setAttribute("position", playerPos);
+				}
+
+				function jump() {
+					playerPos.y = 2.5;
+					player.setAttribute("position", playerPos);
+
+					setTimeout(function () {
+						playerPos.y = 1.6;
+						player.setAttribute("position", playerPos);
+					}, 500);
+				}
+			</script>
+		</a-scene>
+	</body>
+</html>
